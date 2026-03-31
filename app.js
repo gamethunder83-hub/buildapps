@@ -28,7 +28,7 @@ import {
 const fallbackRoutes = [
   {
     id: "route-1",
-    name: "Route 1",
+    name: "Bus 01",
     label: "North Gate Loop",
     description: "Main Gate -> Library -> Engineering Block -> Hostel",
     center: { lat: 12.9716, lng: 77.5946 },
@@ -41,7 +41,7 @@ const fallbackRoutes = [
   },
   {
     id: "route-2",
-    name: "Route 2",
+    name: "Bus 02",
     label: "South Campus Express",
     description: "Admin Block -> Auditorium -> Medical Centre -> Faculty Quarters",
     center: { lat: 12.9675, lng: 77.6001 },
@@ -54,7 +54,7 @@ const fallbackRoutes = [
   },
   {
     id: "route-3",
-    name: "Route 3",
+    name: "Bus 03",
     label: "East Residence Shuttle",
     description: "Hostel Block A -> Stadium -> Cafeteria -> East Parking",
     center: { lat: 12.9781, lng: 77.6012 },
@@ -63,6 +63,84 @@ const fallbackRoutes = [
       { lat: 12.9799, lng: 77.6037 },
       { lat: 12.9816, lng: 77.6021 },
       { lat: 12.9808, lng: 77.5996 }
+    ]
+  },
+  {
+    id: "route-4",
+    name: "Bus 04",
+    label: "West Residence Loop",
+    description: "Hostel West -> Sports Complex -> Lab Block -> Main Gate",
+    center: { lat: 12.9704, lng: 77.5895 },
+    path: [
+      { lat: 12.9704, lng: 77.5895 },
+      { lat: 12.9722, lng: 77.5906 },
+      { lat: 12.9733, lng: 77.5937 },
+      { lat: 12.9714, lng: 77.5954 }
+    ]
+  },
+  {
+    id: "route-5",
+    name: "Bus 05",
+    label: "City Connector",
+    description: "Metro Stop -> Commerce Block -> Auditorium -> North Gate",
+    center: { lat: 12.9688, lng: 77.5964 },
+    path: [
+      { lat: 12.9688, lng: 77.5964 },
+      { lat: 12.9697, lng: 77.5989 },
+      { lat: 12.9712, lng: 77.6007 },
+      { lat: 12.9728, lng: 77.5984 }
+    ]
+  },
+  {
+    id: "route-6",
+    name: "Bus 06",
+    label: "Faculty Quarters Shuttle",
+    description: "Faculty Quarters -> Medical Centre -> Admin Block -> Library",
+    center: { lat: 12.9657, lng: 77.6033 },
+    path: [
+      { lat: 12.9657, lng: 77.6033 },
+      { lat: 12.9664, lng: 77.6011 },
+      { lat: 12.9683, lng: 77.5995 },
+      { lat: 12.9702, lng: 77.5979 }
+    ]
+  },
+  {
+    id: "route-7",
+    name: "Bus 07",
+    label: "North Hostel Connector",
+    description: "North Hostel -> Innovation Center -> Stadium -> Main Gate",
+    center: { lat: 12.9791, lng: 77.5982 },
+    path: [
+      { lat: 12.9791, lng: 77.5982 },
+      { lat: 12.9782, lng: 77.6001 },
+      { lat: 12.9766, lng: 77.5985 },
+      { lat: 12.9744, lng: 77.5967 }
+    ]
+  },
+  {
+    id: "route-8",
+    name: "Bus 08",
+    label: "Library Ring",
+    description: "Library -> Research Park -> Engineering Block -> Cafeteria",
+    center: { lat: 12.9738, lng: 77.5998 },
+    path: [
+      { lat: 12.9738, lng: 77.5998 },
+      { lat: 12.9754, lng: 77.6016 },
+      { lat: 12.9771, lng: 77.6002 },
+      { lat: 12.9756, lng: 77.5979 }
+    ]
+  },
+  {
+    id: "route-9",
+    name: "Bus 09",
+    label: "Evening Drop Route",
+    description: "Admin Block -> East Gate -> City Stop -> Hostel Return",
+    center: { lat: 12.9673, lng: 77.6061 },
+    path: [
+      { lat: 12.9673, lng: 77.6061 },
+      { lat: 12.9689, lng: 77.6044 },
+      { lat: 12.9708, lng: 77.6028 },
+      { lat: 12.9725, lng: 77.6005 }
     ]
   }
 ];
@@ -77,6 +155,11 @@ const appState = {
   watchId: null,
   geofenceWatchId: null,
   routeUnsubscribe: null,
+  driverAssignedRouteId: null,
+  driverTripStartTime: null,
+  driverTripTimer: null,
+  driverUpdateCount: 0,
+  driverLastCoords: null,
   map: null,
   busMarker: null,
   studentMarker: null,
@@ -93,6 +176,9 @@ const appState = {
 
 const els = {
   authLayout: document.getElementById("authLayout"),
+  driverPickerLayout: document.getElementById("driverPickerLayout"),
+  driverBusGrid: document.getElementById("driverBusGrid"),
+  driverBusContinueBtn: document.getElementById("driverBusContinueBtn"),
   appDashboard: document.getElementById("appDashboard"),
   authModeSwitch: document.getElementById("authModeSwitch"),
   authRoleSwitch: document.getElementById("authRoleSwitch"),
@@ -108,6 +194,7 @@ const els = {
   sessionRole: document.getElementById("sessionRole"),
   logoutBtn: document.getElementById("logoutBtn"),
   routeList: document.getElementById("routeList"),
+  routePanel: document.getElementById("routePanel"),
   connectionBadge: document.getElementById("connectionBadge"),
   selectedRouteTitle: document.getElementById("selectedRouteTitle"),
   routeMetaBadge: document.getElementById("routeMetaBadge"),
@@ -122,8 +209,16 @@ const els = {
   driverStatus: document.getElementById("driverStatus"),
   startTrackingBtn: document.getElementById("startTrackingBtn"),
   stopTrackingBtn: document.getElementById("stopTrackingBtn"),
+  driverAssignedBus: document.getElementById("driverAssignedBus"),
+  driverTripStatus: document.getElementById("driverTripStatus"),
+  driverGpsStatus: document.getElementById("driverGpsStatus"),
   driverTrackingState: document.getElementById("driverTrackingState"),
   driverLastPing: document.getElementById("driverLastPing"),
+  driverLatitude: document.getElementById("driverLatitude"),
+  driverLongitude: document.getElementById("driverLongitude"),
+  driverAccuracy: document.getElementById("driverAccuracy"),
+  driverUpdatesSent: document.getElementById("driverUpdatesSent"),
+  driverTripDuration: document.getElementById("driverTripDuration"),
   map: document.getElementById("map")
 };
 
@@ -168,6 +263,7 @@ function setupAuthUi() {
 
   els.authForm.addEventListener("submit", handleAuthSubmit);
   els.logoutBtn.addEventListener("click", handleLogout);
+  els.driverBusContinueBtn.addEventListener("click", openDriverDashboard);
   setAuthMode("signin");
   setSignupRole("student");
 }
@@ -365,6 +461,23 @@ function renderRoutes() {
   });
 }
 
+function renderDriverBusGrid() {
+  els.driverBusGrid.innerHTML = "";
+  appState.routes.forEach((route) => {
+    const card = document.createElement("button");
+    card.className = "driver-bus-card";
+    card.type = "button";
+    card.dataset.routeId = route.id;
+    card.innerHTML = `
+      <div class="driver-bus-icon">&#128652;</div>
+      <strong>${route.name}</strong>
+      <span>${route.label}</span>
+    `;
+    card.addEventListener("click", () => selectDriverBus(route.id));
+    els.driverBusGrid.appendChild(card);
+  });
+}
+
 function selectRoute(routeId) {
   if (!routeId) return;
   appState.selectedRouteId = routeId;
@@ -382,6 +495,21 @@ function selectRoute(routeId) {
   fitRoute(route);
   subscribeToRoute(route.id);
   updateStatusCopy();
+}
+
+function selectDriverBus(routeId) {
+  appState.driverAssignedRouteId = routeId;
+  document.querySelectorAll(".driver-bus-card").forEach((card) => {
+    card.classList.toggle("active", card.dataset.routeId === routeId);
+  });
+  els.driverBusContinueBtn.disabled = false;
+}
+
+function openDriverDashboard() {
+  if (!appState.driverAssignedRouteId) return;
+  selectRoute(appState.driverAssignedRouteId);
+  els.driverPickerLayout.classList.add("hidden");
+  els.appDashboard.classList.remove("hidden");
 }
 
 function getSelectedRoute() {
@@ -425,7 +553,6 @@ function handleSignedInState(user, profile) {
   appState.role = profile.role;
 
   els.authLayout.classList.add("hidden");
-  els.appDashboard.classList.remove("hidden");
   els.logoutBtn.classList.remove("hidden");
   els.sessionName.textContent = profile.name || user.displayName || user.email || "Campus user";
   els.sessionRole.textContent = `${capitalize(profile.role)} account - ${user.email || ""}`;
@@ -434,9 +561,17 @@ function handleSignedInState(user, profile) {
 
   els.studentPanel.classList.toggle("hidden", profile.role !== "student");
   els.driverPanel.classList.toggle("hidden", profile.role !== "driver");
+  els.routePanel.classList.toggle("hidden", profile.role === "driver");
 
   if (profile.role === "student") {
+    els.driverPickerLayout.classList.add("hidden");
+    els.appDashboard.classList.remove("hidden");
     createStudentWatcher();
+  } else {
+    els.appDashboard.classList.add("hidden");
+    els.driverPickerLayout.classList.remove("hidden");
+    els.driverBusContinueBtn.disabled = !appState.driverAssignedRouteId;
+    renderDriverBusGrid();
   }
 
   updateStatusCopy();
@@ -459,7 +594,10 @@ async function handleSignedOutState() {
   appState.currentUser = null;
   appState.currentProfile = null;
   appState.role = null;
+  appState.driverAssignedRouteId = null;
+  resetDriverTripMetrics();
   els.authLayout.classList.remove("hidden");
+  els.driverPickerLayout.classList.add("hidden");
   els.appDashboard.classList.add("hidden");
   els.logoutBtn.classList.add("hidden");
   els.sessionName.textContent = "Signed out";
@@ -555,11 +693,14 @@ function updateStatusCopy() {
       return;
     }
 
+    els.driverAssignedBus.textContent = route.name;
     els.driverStatus.textContent = isActive
       ? `${route.name} is broadcasting live. Students on this route are seeing your location now.`
       : `Route locked to ${route.name}. Tap Start to begin live GPS sharing.`;
 
     els.driverTrackingState.textContent = isActive ? "Live" : "Offline";
+    els.driverTripStatus.textContent = isActive ? "Trip active" : "Trip inactive";
+    els.driverGpsStatus.textContent = isActive ? "GPS live" : "GPS standby";
     els.driverLastPing.textContent = updatedAt ? updatedAt.toLocaleTimeString() : "--";
   }
 }
@@ -590,9 +731,14 @@ async function startDriverTracking() {
   els.startTrackingBtn.disabled = true;
   els.stopTrackingBtn.disabled = false;
   els.driverTrackingState.textContent = "Starting";
+  appState.driverTripStartTime = Date.now();
+  appState.driverUpdateCount = 0;
+  startDriverTripTimer();
 
   appState.watchId = navigator.geolocation.watchPosition(
     async (position) => {
+      appState.driverUpdateCount += 1;
+      appState.driverLastCoords = position.coords;
       const payload = {
         routeId: route.id,
         routeName: route.name,
@@ -611,6 +757,7 @@ async function startDriverTracking() {
       await set(ref(appState.database, `routes/${route.id}/live`), payload);
       appState.selectedRouteLive = payload;
       updateBusMarker(payload);
+      updateDriverTelemetry(position.coords);
       updateStatusCopy();
     },
     (error) => {
@@ -619,6 +766,7 @@ async function startDriverTracking() {
       els.startTrackingBtn.disabled = false;
       els.stopTrackingBtn.disabled = true;
       els.driverTrackingState.textContent = "Offline";
+      stopDriverTripTimer();
     },
     {
       enableHighAccuracy: true,
@@ -646,6 +794,7 @@ async function stopDriverTracking() {
   els.startTrackingBtn.disabled = false;
   els.stopTrackingBtn.disabled = true;
   els.driverTrackingState.textContent = "Offline";
+  stopDriverTripTimer();
   updateStatusCopy();
 }
 
@@ -780,6 +929,56 @@ function loadScript(src) {
     script.onerror = reject;
     document.head.appendChild(script);
   });
+}
+
+function updateDriverTelemetry(coords) {
+  els.driverLatitude.textContent = coords?.latitude ? coords.latitude.toFixed(6) : "--";
+  els.driverLongitude.textContent = coords?.longitude ? coords.longitude.toFixed(6) : "--";
+  els.driverAccuracy.textContent = coords?.accuracy
+    ? `${Math.round(coords.accuracy)} m`
+    : "--";
+  els.driverUpdatesSent.textContent = String(appState.driverUpdateCount);
+}
+
+function startDriverTripTimer() {
+  stopDriverTripTimer();
+  updateDriverTripDuration();
+  appState.driverTripTimer = window.setInterval(updateDriverTripDuration, 1000);
+}
+
+function stopDriverTripTimer() {
+  if (appState.driverTripTimer !== null) {
+    window.clearInterval(appState.driverTripTimer);
+    appState.driverTripTimer = null;
+  }
+  updateDriverTripDuration();
+}
+
+function updateDriverTripDuration() {
+  if (!appState.driverTripStartTime) {
+    els.driverTripDuration.textContent = "00:00:00";
+    return;
+  }
+  const elapsed = Math.max(0, Date.now() - appState.driverTripStartTime);
+  const totalSeconds = Math.floor(elapsed / 1000);
+  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+  els.driverTripDuration.textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+function resetDriverTripMetrics() {
+  appState.driverTripStartTime = null;
+  appState.driverUpdateCount = 0;
+  appState.driverLastCoords = null;
+  stopDriverTripTimer();
+  els.driverAssignedBus.textContent = "--";
+  els.driverTripStatus.textContent = "Trip inactive";
+  els.driverGpsStatus.textContent = "GPS standby";
+  els.driverLatitude.textContent = "--";
+  els.driverLongitude.textContent = "--";
+  els.driverAccuracy.textContent = "--";
+  els.driverUpdatesSent.textContent = "0";
 }
 
 function createBusIcon(isMoving) {

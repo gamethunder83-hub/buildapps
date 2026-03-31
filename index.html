@@ -86,9 +86,29 @@
         </section>
       </main>
 
+      <main class="driver-picker-layout hidden" id="driverPickerLayout">
+        <section class="driver-picker-shell">
+          <div class="driver-picker-header">
+            <div class="driver-badge">Driver</div>
+            <h2>Select Your Bus</h2>
+            <p>Choose the bus you are driving today before opening the live dashboard.</p>
+            <div class="driver-status-row">
+              <span class="driver-status-item online">Driver online</span>
+              <span class="driver-status-item offline">Offline buses available</span>
+            </div>
+          </div>
+
+          <div class="driver-bus-grid" id="driverBusGrid"></div>
+
+          <button id="driverBusContinueBtn" class="driver-continue-btn" disabled>
+            Continue
+          </button>
+        </section>
+      </main>
+
       <main class="dashboard hidden" id="appDashboard">
         <section class="sidebar">
-          <div class="panel glass">
+          <div class="panel glass" id="routePanel">
             <div class="panel-header">
               <div>
                 <p class="panel-kicker">Routes</p>
@@ -137,12 +157,22 @@
                 <h2>Assigned route controls</h2>
               </div>
             </div>
+            <div class="driver-summary-card">
+              <div>
+                <span class="driver-summary-label">Assigned Bus</span>
+                <strong id="driverAssignedBus">--</strong>
+              </div>
+              <div class="driver-summary-meta">
+                <span class="driver-summary-pill" id="driverTripStatus">Trip inactive</span>
+                <span class="driver-summary-pill" id="driverGpsStatus">GPS standby</span>
+              </div>
+            </div>
             <div class="info-card driver-card">
               <p id="driverStatus">Choose your route, then tap Start to begin sharing live location.</p>
             </div>
             <div class="action-row">
-              <button id="startTrackingBtn" class="action-button primary">Start Tracking</button>
-              <button id="stopTrackingBtn" class="action-button muted" disabled>Stop</button>
+              <button id="startTrackingBtn" class="action-button primary">Start Trip</button>
+              <button id="stopTrackingBtn" class="action-button muted" disabled>Stop Trip</button>
             </div>
             <div class="info-grid">
               <article class="mini-card">
@@ -154,6 +184,31 @@
                 <strong id="driverLastPing">--</strong>
               </article>
             </div>
+            <section class="driver-feed-card">
+              <p class="panel-kicker driver-feed-kicker">Live GPS Feed -> Firebase</p>
+              <div class="info-grid">
+                <article class="mini-card">
+                  <span>Latitude</span>
+                  <strong id="driverLatitude">--</strong>
+                </article>
+                <article class="mini-card">
+                  <span>Longitude</span>
+                  <strong id="driverLongitude">--</strong>
+                </article>
+                <article class="mini-card">
+                  <span>Accuracy</span>
+                  <strong id="driverAccuracy">--</strong>
+                </article>
+                <article class="mini-card">
+                  <span>Updates sent</span>
+                  <strong id="driverUpdatesSent">0</strong>
+                </article>
+              </div>
+              <div class="driver-duration">
+                <span>Trip Duration</span>
+                <strong id="driverTripDuration">00:00:00</strong>
+              </div>
+            </section>
           </section>
         </section>
 
