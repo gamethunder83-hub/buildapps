@@ -107,6 +107,82 @@ input {
   box-shadow: 0 12px 24px rgba(239, 125, 24, 0.28);
 }
 
+.session-card {
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.session-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.session-copy strong {
+  font-size: 1rem;
+}
+
+.session-role {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.session-button {
+  min-width: 120px;
+}
+
+.auth-layout {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 220px);
+}
+
+.auth-panel {
+  width: min(100%, 520px);
+  padding: 24px;
+}
+
+.auth-header {
+  margin-bottom: 16px;
+}
+
+.auth-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 18px;
+  background: rgba(255, 250, 240, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+.auth-role-toggle {
+  margin-bottom: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.field input[type="email"],
+.field input[type="password"] {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--text);
+}
+
+.auth-submit {
+  margin: 6px 0 16px;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: 380px minmax(0, 1fr);
@@ -351,10 +427,17 @@ input {
     padding: 16px;
   }
 
-  .role-switch {
+  .role-switch,
+  .auth-toggle {
     width: 100%;
     flex-direction: column;
     border-radius: 24px;
+  }
+
+  .session-card {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .route-list,

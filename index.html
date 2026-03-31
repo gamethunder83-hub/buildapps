@@ -23,19 +23,70 @@
       <header class="hero">
         <div>
           <p class="eyebrow">Campus Transit</p>
-          <h1>Track every bus in real time with two taps.</h1>
+          <h1>Track every bus in real time with secure student and driver access.</h1>
           <p class="hero-copy">
-            Built for students, faculty, and drivers. Open a route, see the live
-            bus, and let geofence attendance happen automatically.
+            Sign in once, get your role-aware dashboard, and keep route tracking
+            and geofence attendance in one smooth flow.
           </p>
         </div>
-        <div class="role-switch" id="roleSwitch">
-          <button class="role-chip active" data-role="student">Continue as Student</button>
-          <button class="role-chip" data-role="driver">Continue as Driver</button>
+        <div class="session-card glass">
+          <div class="session-copy">
+            <span class="panel-kicker">Session</span>
+            <strong id="sessionName">Signed out</strong>
+            <span id="sessionRole" class="session-role">Choose a role and sign in</span>
+          </div>
+          <button id="logoutBtn" class="action-button muted session-button hidden">Log Out</button>
         </div>
       </header>
 
-      <main class="dashboard">
+      <main class="auth-layout" id="authLayout">
+        <section class="panel glass auth-panel">
+          <div class="panel-header auth-header">
+            <div>
+              <p class="panel-kicker">Account Access</p>
+              <h2>Sign in or create an account</h2>
+            </div>
+          </div>
+
+          <div class="auth-toggle" id="authModeSwitch">
+            <button class="role-chip active" data-auth-mode="signin">Sign In</button>
+            <button class="role-chip" data-auth-mode="signup">Create Account</button>
+          </div>
+
+          <form id="authForm" class="auth-form">
+            <label class="field hidden" id="nameField">
+              <span>Full name</span>
+              <input id="authName" type="text" maxlength="60" placeholder="Enter your name" />
+            </label>
+
+            <label class="field">
+              <span>Email address</span>
+              <input id="authEmail" type="email" autocomplete="username" placeholder="name@college.edu" required />
+            </label>
+
+            <label class="field">
+              <span>Password</span>
+              <input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimum 6 characters" required />
+            </label>
+
+            <div class="field hidden" id="roleField">
+              <span>Account role</span>
+              <div class="auth-toggle auth-role-toggle" id="authRoleSwitch">
+                <button class="role-chip active" type="button" data-signup-role="student">Student</button>
+                <button class="role-chip" type="button" data-signup-role="driver">Driver</button>
+              </div>
+            </div>
+
+            <button id="authSubmitBtn" class="action-button primary auth-submit" type="submit">Sign In</button>
+          </form>
+
+          <div class="info-card">
+            <p id="authStatus">Use your campus account details to enter the tracker.</p>
+          </div>
+        </section>
+      </main>
+
+      <main class="dashboard hidden" id="appDashboard">
         <section class="sidebar">
           <div class="panel glass">
             <div class="panel-header">

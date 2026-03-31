@@ -4,7 +4,7 @@ A Vercel-ready campus bus tracking web app for students, faculty, and drivers.
 
 ## What it includes
 
-- No-login role selection for student or driver
+- Email/password login for students and drivers with role-aware access
 - Route cards for switching between predefined buses
 - Full-screen Leaflet map with OpenStreetMap tiles and a live orange bus marker
 - Driver Start and Stop controls using device GPS
@@ -24,9 +24,20 @@ A Vercel-ready campus bus tracking web app for students, faculty, and drivers.
 ## Setup
 
 1. Create a Firebase project.
-2. Enable Realtime Database and Firestore.
-3. Replace the placeholders in `firebase-config.js`.
-4. Deploy this folder to Vercel as a static site.
+2. Enable Authentication with the `Email/Password` provider.
+3. Enable Realtime Database and Firestore.
+4. Replace the placeholders in `firebase-config.js`.
+5. Deploy this folder to Vercel as a static site.
+
+## Auth model
+
+- New accounts are created in Firebase Authentication.
+- A matching Firestore document is stored in `users/{uid}` with:
+  - `name`
+  - `email`
+  - `role` (`student` or `driver`)
+- Signed-in students can only use the student dashboard.
+- Signed-in drivers can only use the driver dashboard and start live tracking.
 
 ## Firebase shape
 
@@ -53,6 +64,7 @@ Suggested Realtime Database structure:
 
 Suggested Firestore collections:
 
+- `users`
 - `routes`
 - `attendance`
 
@@ -75,5 +87,5 @@ Example `routes` document:
 
 - The app falls back to built-in demo routes if Firestore route data is not present.
 - HTTPS is required in production for browser geolocation.
-- The current version is intentionally auth-free, so tighten Firebase rules before production rollout.
+- Tighten Firebase Auth, Firestore, and Realtime Database rules before production rollout.
 - The map uses Leaflet with OpenStreetMap tiles, so no Google Maps key is required.
