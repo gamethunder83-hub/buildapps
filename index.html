@@ -163,6 +163,23 @@
                 <strong id="driverTripDuration">00:00:00</strong>
               </div>
             </section>
+            <section class="driver-stops-card">
+              <div class="panel-header driver-stops-header">
+                <div>
+                  <p class="panel-kicker">Bus Stops</p>
+                  <h2>Edit route stops</h2>
+                </div>
+              </div>
+              <div id="driverStopsList" class="driver-stops-list"></div>
+              <div class="driver-stop-add-row">
+                <input id="driverStopInput" type="text" placeholder="Add new stop" />
+                <button id="driverAddStopBtn" class="action-button muted" type="button">Add</button>
+              </div>
+              <button id="driverSaveStopsBtn" class="action-button primary" type="button">Save Stops</button>
+              <div class="info-card compact">
+                <p id="driverStopsStatus">Saved stops will appear in the student dashboard after update.</p>
+              </div>
+            </section>
           </section>
         </section>
 
@@ -242,5 +259,6 @@
 
     <script src="./firebase-config.js"></script>
     <script type="module" src="./app.js"></script>
+    <script type="module" src="./driver-stops-patch.js"></script>
   </body>
 </html>

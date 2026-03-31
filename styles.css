@@ -337,10 +337,6 @@ input {
   color: var(--text);
 }
 
-.auth-submit {
-  margin: 6px 0 16px;
-}
-
 .set-stop-mode {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -351,6 +347,10 @@ input {
   background: rgba(255, 250, 240, 0.7);
   border: 1px solid var(--border);
   border-radius: 24px;
+}
+
+.auth-submit {
+  margin: 6px 0 16px;
 }
 
 .dashboard {
@@ -572,6 +572,58 @@ input {
   letter-spacing: 0.08em;
 }
 
+.driver-stops-card {
+  margin-top: 18px;
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid var(--border);
+}
+
+.driver-stops-header {
+  margin-bottom: 14px;
+}
+
+.driver-stops-list {
+  display: grid;
+  gap: 10px;
+}
+
+.driver-stop-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 12px 14px;
+}
+
+.driver-stop-item span {
+  font-weight: 600;
+}
+
+.driver-stop-delete {
+  flex: 0 0 auto;
+  min-width: 88px;
+}
+
+.driver-stop-add-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.driver-stop-add-row input {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--text);
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -722,6 +774,12 @@ input {
   .action-row {
     grid-template-columns: 1fr;
     flex-direction: column;
+  }
+
+  .driver-stop-add-row,
+  .driver-stop-item {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .map-canvas {
