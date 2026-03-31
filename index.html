@@ -29,14 +29,7 @@
             and geofence attendance in one smooth flow.
           </p>
         </div>
-        <div class="session-card glass">
-          <div class="session-copy">
-            <span class="panel-kicker">Session</span>
-            <strong id="sessionName">Signed out</strong>
-            <span id="sessionRole" class="session-role">Choose a role and sign in</span>
-          </div>
-          <button id="logoutBtn" class="action-button muted session-button hidden">Log Out</button>
-        </div>
+        <button id="logoutBtn" class="action-button muted top-logout hidden">Log Out</button>
       </header>
 
       <main class="auth-layout" id="authLayout">
@@ -104,65 +97,19 @@
 
       <main class="dashboard hidden" id="appDashboard">
         <section class="sidebar">
-          <div class="panel glass" id="routePanel">
+          <div class="panel glass route-select-panel" id="routePanel">
             <div class="panel-header">
               <div>
                 <p class="panel-kicker">Routes</p>
-                <h2>Available buses</h2>
+                <h2>Select bus route</h2>
               </div>
               <span class="status-pill" id="connectionBadge">Waiting for config</span>
             </div>
-            <div id="routeList" class="route-list"></div>
-          </div>
-
-          <section id="studentPanel" class="panel glass control-panel">
-            <div class="panel-header">
-              <div>
-                <p class="panel-kicker">Tracking Your Selected Bus</p>
-                <h2>My Bus No</h2>
-              </div>
-            </div>
-            <div class="info-card">
-              <p id="studentStatus">Select a route to start watching the bus.</p>
-            </div>
-            <div class="info-grid">
-              <article class="mini-card">
-                <span>Tracking</span>
-                <strong id="studentTrackedBus">--</strong>
-              </article>
-              <article class="mini-card">
-                <span>ETA to your stop</span>
-                <strong id="studentEta">--</strong>
-              </article>
-            </div>
-            <label class="field">
-              <span>Set Stop</span>
-              <select id="studentStopSelect">
-                <option value="">Select a stop</option>
-              </select>
+            <label class="field route-select-field">
+              <span>Choose route</span>
+              <select id="routeSelect"></select>
             </label>
-            <div class="info-grid">
-              <article class="mini-card">
-                <span>Bus status</span>
-                <strong id="studentBusLiveState">Offline</strong>
-              </article>
-              <article class="mini-card">
-                <span>Attendance</span>
-                <strong id="attendanceState">Idle</strong>
-              </article>
-              <article class="mini-card">
-                <span>Bus speed</span>
-                <strong id="busSpeed">0 km/h</strong>
-              </article>
-              <article class="mini-card">
-                <span>Updated</span>
-                <strong id="studentLastUpdate">--</strong>
-              </article>
-            </div>
-            <div class="info-card compact">
-              <p id="studentBusCoords">--, --</p>
-            </div>
-          </section>
+          </div>
 
           <section id="driverPanel" class="panel glass control-panel hidden">
             <div class="panel-header">
@@ -227,16 +174,68 @@
         </section>
 
         <section class="map-panel glass">
-            <div class="map-header">
-              <div>
-                <p class="panel-kicker">Live Map</p>
-                <h2 id="selectedRouteTitle">Choose a route</h2>
-              </div>
-              <div class="map-meta">
-              <span id="routeMetaBadge" class="status-pill secondary">Select a bus route</span>
-              </div>
+          <div class="map-header">
+            <div>
+              <p class="panel-kicker">Live Map</p>
+              <h2 id="selectedRouteTitle">Choose a route</h2>
             </div>
+            <div class="map-meta">
+              <span id="routeMetaBadge" class="status-pill secondary">Select a bus route</span>
+              <button id="mapFullscreenBtn" class="action-button muted map-fullscreen-btn" type="button">
+                Full Screen
+              </button>
+            </div>
+          </div>
           <div id="map" class="map-canvas" aria-label="Campus bus map"></div>
+        </section>
+
+        <section id="studentPanel" class="panel glass control-panel student-bottom-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Tracking Your Selected Bus</p>
+              <h2>My Bus No</h2>
+            </div>
+          </div>
+          <div class="info-card">
+            <p id="studentStatus">Select a route to start watching the bus.</p>
+          </div>
+          <div class="info-grid">
+            <article class="mini-card">
+              <span>Tracking</span>
+              <strong id="studentTrackedBus">--</strong>
+            </article>
+            <article class="mini-card">
+              <span>ETA to your stop</span>
+              <strong id="studentEta">--</strong>
+            </article>
+          </div>
+          <label class="field">
+            <span>Set Stop</span>
+            <select id="studentStopSelect">
+              <option value="">Select a stop</option>
+            </select>
+          </label>
+          <div class="info-grid">
+            <article class="mini-card">
+              <span>Bus status</span>
+              <strong id="studentBusLiveState">Offline</strong>
+            </article>
+            <article class="mini-card">
+              <span>Attendance</span>
+              <strong id="attendanceState">Idle</strong>
+            </article>
+            <article class="mini-card">
+              <span>Bus speed</span>
+              <strong id="busSpeed">0 km/h</strong>
+            </article>
+            <article class="mini-card">
+              <span>Updated</span>
+              <strong id="studentLastUpdate">--</strong>
+            </article>
+          </div>
+          <div class="info-card compact">
+            <p id="studentBusCoords">--, --</p>
+          </div>
         </section>
       </main>
     </div>

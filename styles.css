@@ -138,6 +138,11 @@ input {
   min-width: 120px;
 }
 
+.top-logout {
+  flex: 0 0 auto;
+  min-width: 120px;
+}
+
 .auth-layout {
   display: grid;
   place-items: center;
@@ -347,15 +352,23 @@ input {
 
 .dashboard {
   display: grid;
-  grid-template-columns: 380px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
+  grid-template-areas:
+    "sidebar map"
+    "student map";
   gap: 20px;
   min-height: calc(100vh - 160px);
 }
 
 .sidebar {
+  grid-area: sidebar;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.student-bottom-panel {
+  grid-area: student;
 }
 
 .glass {
@@ -617,9 +630,30 @@ input {
 }
 
 .map-panel {
+  grid-area: map;
   display: flex;
   flex-direction: column;
   min-height: 100%;
+}
+
+.route-select-panel {
+  padding-bottom: 12px;
+}
+
+.route-select-field {
+  margin-bottom: 0;
+}
+
+.map-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.map-fullscreen-btn {
+  flex: 0 0 auto;
+  min-width: 138px;
 }
 
 .map-canvas {
@@ -634,6 +668,10 @@ input {
 @media (max-width: 1080px) {
   .dashboard {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "sidebar"
+      "map"
+      "student";
   }
 
   .hero {
@@ -661,6 +699,10 @@ input {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .top-logout {
+    width: 100%;
   }
 
   .driver-picker-layout {

@@ -204,6 +204,7 @@ const els = {
   sessionRole: document.getElementById("sessionRole"),
   logoutBtn: document.getElementById("logoutBtn"),
   routeList: document.getElementById("routeList"),
+  routeSelect: document.getElementById("routeSelect"),
   routePanel: document.getElementById("routePanel"),
   connectionBadge: document.getElementById("connectionBadge"),
   selectedRouteTitle: document.getElementById("selectedRouteTitle"),
@@ -232,6 +233,7 @@ const els = {
   driverAccuracy: document.getElementById("driverAccuracy"),
   driverUpdatesSent: document.getElementById("driverUpdatesSent"),
   driverTripDuration: document.getElementById("driverTripDuration"),
+  mapFullscreenBtn: document.getElementById("mapFullscreenBtn"),
   map: document.getElementById("map")
 };
 
@@ -282,12 +284,15 @@ function setupAuthUi() {
 function setupAppActions() {
   els.startTrackingBtn.addEventListener("click", startDriverTracking);
   els.stopTrackingBtn.addEventListener("click", stopDriverTracking);
+  els.routeSelect.addEventListener("change", () => selectRoute(els.routeSelect.value));
   els.studentStopSelect.addEventListener("change", () => {
     appState.studentSelectedStopIndex =
       els.studentStopSelect.value === "" ? null : Number(els.studentStopSelect.value);
     updateStudentEta();
   });
+  els.mapFullscreenBtn.addEventListener("click", toggleMapFullscreen);
   window.addEventListener("resize", refreshMapLayout);
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
 }
 
 function setAuthMode(mode) {
@@ -456,18 +461,15 @@ async function loadRoutes() {
 }
 
 function renderRoutes() {
-  els.routeList.innerHTML = "";
+  if (els.routeList) {
+    els.routeList.innerHTML = "";
+  }
+  els.routeSelect.innerHTML = "";
   appState.routes.forEach((route) => {
-    const card = document.createElement("button");
-    card.className = "route-card";
-    card.type = "button";
-    card.dataset.routeId = route.id;
-    card.innerHTML = `
-      <strong>${route.name}</strong>
-      <span class="driver-bus-arrow">&rarr;</span>
-    `;
-    card.addEventListener("click", () => selectRoute(route.id));
-    els.routeList.appendChild(card);
+    const option = document.createElement("option");
+    option.value = route.id;
+    option.textContent = route.name;
+    els.routeSelect.appendChild(option);
   });
 }
 
@@ -493,9 +495,7 @@ function selectRoute(routeId) {
   appState.selectedRouteId = routeId;
   appState.geofenceCheckinKey = null;
   els.attendanceState.textContent = "Idle";
-  document.querySelectorAll(".route-card").forEach((card) => {
-    card.classList.toggle("active", card.dataset.routeId === routeId);
-  });
+  els.routeSelect.value = routeId;
 
   const route = getSelectedRoute();
   if (!route) return;
@@ -568,8 +568,6 @@ function handleSignedInState(user, profile) {
 
   els.authLayout.classList.add("hidden");
   els.logoutBtn.classList.remove("hidden");
-  els.sessionName.textContent = profile.name || user.displayName || user.email || "Campus user";
-  els.sessionRole.textContent = `${capitalize(profile.role)} account - ${user.email || ""}`;
 
   els.studentPanel.classList.toggle("hidden", profile.role !== "student");
   els.driverPanel.classList.toggle("hidden", profile.role !== "driver");
@@ -613,8 +611,6 @@ async function handleSignedOutState() {
   els.driverPickerLayout.classList.add("hidden");
   els.appDashboard.classList.add("hidden");
   els.logoutBtn.classList.add("hidden");
-  els.sessionName.textContent = "Signed out";
-  els.sessionRole.textContent = "Choose a role and sign in";
   els.studentPanel.classList.add("hidden");
   els.driverPanel.classList.add("hidden");
   els.authPassword.value = "";
@@ -1064,6 +1060,26 @@ function refreshMapLayout() {
       appState.map.invalidateSize(true);
     }, delay);
   });
+}
+
+async function toggleMapFullscreen() {
+  const panel = document.querySelector(".map-panel");
+  if (!panel) return;
+
+  if (document.fullscreenElement) {
+    await document.exitFullscreen();
+    return;
+  }
+
+  if (panel.requestFullscreen) {
+    await panel.requestFullscreen();
+    refreshMapLayout();
+  }
+}
+
+function handleFullscreenChange() {
+  els.mapFullscreenBtn.textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+  refreshMapLayout();
 }
 
 function createBusIcon(isMoving) {
