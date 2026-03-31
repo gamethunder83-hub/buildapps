@@ -30,118 +30,127 @@ const fallbackRoutes = [
     id: "route-1",
     name: "Bus 01",
     label: "North Gate Loop",
-    description: "Main Gate -> Library -> Engineering Block -> Hostel",
+    description: "Main Gate Loop",
     center: { lat: 12.9716, lng: 77.5946 },
     path: [
       { lat: 12.9716, lng: 77.5946 },
       { lat: 12.9731, lng: 77.5925 },
       { lat: 12.9751, lng: 77.5942 },
       { lat: 12.9742, lng: 77.5972 }
-    ]
+    ],
+    stops: ["Main Gate", "Library", "Engineering Block", "Hostel"]
   },
   {
     id: "route-2",
     name: "Bus 02",
     label: "South Campus Express",
-    description: "Admin Block -> Auditorium -> Medical Centre -> Faculty Quarters",
+    description: "South Campus Express",
     center: { lat: 12.9675, lng: 77.6001 },
     path: [
       { lat: 12.9675, lng: 77.6001 },
       { lat: 12.9661, lng: 77.6028 },
       { lat: 12.9642, lng: 77.6015 },
       { lat: 12.9654, lng: 77.5984 }
-    ]
+    ],
+    stops: ["Admin Block", "Auditorium", "Medical Centre", "Faculty Quarters"]
   },
   {
     id: "route-3",
     name: "Bus 03",
     label: "East Residence Shuttle",
-    description: "Hostel Block A -> Stadium -> Cafeteria -> East Parking",
+    description: "East Residence Shuttle",
     center: { lat: 12.9781, lng: 77.6012 },
     path: [
       { lat: 12.9781, lng: 77.6012 },
       { lat: 12.9799, lng: 77.6037 },
       { lat: 12.9816, lng: 77.6021 },
       { lat: 12.9808, lng: 77.5996 }
-    ]
+    ],
+    stops: ["Hostel Block A", "Stadium", "Cafeteria", "East Parking"]
   },
   {
     id: "route-4",
     name: "Bus 04",
     label: "West Residence Loop",
-    description: "Hostel West -> Sports Complex -> Lab Block -> Main Gate",
+    description: "West Residence Loop",
     center: { lat: 12.9704, lng: 77.5895 },
     path: [
       { lat: 12.9704, lng: 77.5895 },
       { lat: 12.9722, lng: 77.5906 },
       { lat: 12.9733, lng: 77.5937 },
       { lat: 12.9714, lng: 77.5954 }
-    ]
+    ],
+    stops: ["Hostel West", "Sports Complex", "Lab Block", "Main Gate"]
   },
   {
     id: "route-5",
     name: "Bus 05",
     label: "City Connector",
-    description: "Metro Stop -> Commerce Block -> Auditorium -> North Gate",
+    description: "City Connector",
     center: { lat: 12.9688, lng: 77.5964 },
     path: [
       { lat: 12.9688, lng: 77.5964 },
       { lat: 12.9697, lng: 77.5989 },
       { lat: 12.9712, lng: 77.6007 },
       { lat: 12.9728, lng: 77.5984 }
-    ]
+    ],
+    stops: ["Metro Stop", "Commerce Block", "Auditorium", "North Gate"]
   },
   {
     id: "route-6",
     name: "Bus 06",
     label: "Faculty Quarters Shuttle",
-    description: "Faculty Quarters -> Medical Centre -> Admin Block -> Library",
+    description: "Faculty Quarters Shuttle",
     center: { lat: 12.9657, lng: 77.6033 },
     path: [
       { lat: 12.9657, lng: 77.6033 },
       { lat: 12.9664, lng: 77.6011 },
       { lat: 12.9683, lng: 77.5995 },
       { lat: 12.9702, lng: 77.5979 }
-    ]
+    ],
+    stops: ["Faculty Quarters", "Medical Centre", "Admin Block", "Library"]
   },
   {
     id: "route-7",
     name: "Bus 07",
     label: "North Hostel Connector",
-    description: "North Hostel -> Innovation Center -> Stadium -> Main Gate",
+    description: "North Hostel Connector",
     center: { lat: 12.9791, lng: 77.5982 },
     path: [
       { lat: 12.9791, lng: 77.5982 },
       { lat: 12.9782, lng: 77.6001 },
       { lat: 12.9766, lng: 77.5985 },
       { lat: 12.9744, lng: 77.5967 }
-    ]
+    ],
+    stops: ["North Hostel", "Innovation Center", "Stadium", "Main Gate"]
   },
   {
     id: "route-8",
     name: "Bus 08",
     label: "Library Ring",
-    description: "Library -> Research Park -> Engineering Block -> Cafeteria",
+    description: "Library Ring",
     center: { lat: 12.9738, lng: 77.5998 },
     path: [
       { lat: 12.9738, lng: 77.5998 },
       { lat: 12.9754, lng: 77.6016 },
       { lat: 12.9771, lng: 77.6002 },
       { lat: 12.9756, lng: 77.5979 }
-    ]
+    ],
+    stops: ["Library", "Research Park", "Engineering Block", "Cafeteria"]
   },
   {
     id: "route-9",
     name: "Bus 09",
     label: "Evening Drop Route",
-    description: "Admin Block -> East Gate -> City Stop -> Hostel Return",
+    description: "Evening Drop Route",
     center: { lat: 12.9673, lng: 77.6061 },
     path: [
       { lat: 12.9673, lng: 77.6061 },
       { lat: 12.9689, lng: 77.6044 },
       { lat: 12.9708, lng: 77.6028 },
       { lat: 12.9725, lng: 77.6005 }
-    ]
+    ],
+    stops: ["Admin Block", "East Gate", "City Stop", "Hostel Return"]
   }
 ];
 
@@ -160,6 +169,7 @@ const appState = {
   driverTripTimer: null,
   driverUpdateCount: 0,
   driverLastCoords: null,
+  studentSelectedStopIndex: null,
   map: null,
   busMarker: null,
   studentMarker: null,
@@ -200,10 +210,13 @@ const els = {
   routeMetaBadge: document.getElementById("routeMetaBadge"),
   studentPanel: document.getElementById("studentPanel"),
   driverPanel: document.getElementById("driverPanel"),
-  studentName: document.getElementById("studentName"),
-  geofenceRadius: document.getElementById("geofenceRadius"),
-  geofenceRadiusValue: document.getElementById("geofenceRadiusValue"),
   studentStatus: document.getElementById("studentStatus"),
+  studentTrackedBus: document.getElementById("studentTrackedBus"),
+  studentEta: document.getElementById("studentEta"),
+  studentStopSelect: document.getElementById("studentStopSelect"),
+  studentBusLiveState: document.getElementById("studentBusLiveState"),
+  studentLastUpdate: document.getElementById("studentLastUpdate"),
+  studentBusCoords: document.getElementById("studentBusCoords"),
   attendanceState: document.getElementById("attendanceState"),
   busSpeed: document.getElementById("busSpeed"),
   driverStatus: document.getElementById("driverStatus"),
@@ -224,8 +237,6 @@ const els = {
 
 const mapsConfig = window.APP_CONFIG || {};
 const defaultRadius = Number(mapsConfig.geofenceRadiusMeters) || 20;
-els.geofenceRadius.value = String(defaultRadius);
-els.geofenceRadiusValue.textContent = `${defaultRadius} meters`;
 
 boot();
 
@@ -271,11 +282,12 @@ function setupAuthUi() {
 function setupAppActions() {
   els.startTrackingBtn.addEventListener("click", startDriverTracking);
   els.stopTrackingBtn.addEventListener("click", stopDriverTracking);
-  els.geofenceRadius.addEventListener("input", () => {
-    els.geofenceRadiusValue.textContent = `${els.geofenceRadius.value} meters`;
-    drawGeofence();
-    maybeCheckInStudent();
+  els.studentStopSelect.addEventListener("change", () => {
+    appState.studentSelectedStopIndex =
+      els.studentStopSelect.value === "" ? null : Number(els.studentStopSelect.value);
+    updateStudentEta();
   });
+  window.addEventListener("resize", refreshMapLayout);
 }
 
 function setAuthMode(mode) {
@@ -452,9 +464,7 @@ function renderRoutes() {
     card.dataset.routeId = route.id;
     card.innerHTML = `
       <strong>${route.name}</strong>
-      <span>${route.label}</span>
-      <span>${route.description}</span>
-      <small>${route.path?.length || 0} stops mapped</small>
+      <span class="driver-bus-arrow">&rarr;</span>
     `;
     card.addEventListener("click", () => selectRoute(route.id));
     els.routeList.appendChild(card);
@@ -471,7 +481,7 @@ function renderDriverBusGrid() {
     card.innerHTML = `
       <div class="driver-bus-icon">&#128652;</div>
       <strong>${route.name}</strong>
-      <span>${route.label}</span>
+      <span class="driver-bus-arrow">&rarr;</span>
     `;
     card.addEventListener("click", () => selectDriverBus(route.id));
     els.driverBusGrid.appendChild(card);
@@ -490,10 +500,13 @@ function selectRoute(routeId) {
   const route = getSelectedRoute();
   if (!route) return;
 
-  els.selectedRouteTitle.textContent = `${route.name} - ${route.label}`;
-  els.routeMetaBadge.textContent = route.description;
+  els.selectedRouteTitle.textContent = route.name;
+  els.routeMetaBadge.textContent = `${route.name} selected`;
+  appState.studentSelectedStopIndex = null;
+  populateStudentStops(route);
   fitRoute(route);
   subscribeToRoute(route.id);
+  refreshMapLayout();
   updateStatusCopy();
 }
 
@@ -510,6 +523,7 @@ function openDriverDashboard() {
   selectRoute(appState.driverAssignedRouteId);
   els.driverPickerLayout.classList.add("hidden");
   els.appDashboard.classList.remove("hidden");
+  refreshMapLayout();
 }
 
 function getSelectedRoute() {
@@ -556,8 +570,6 @@ function handleSignedInState(user, profile) {
   els.logoutBtn.classList.remove("hidden");
   els.sessionName.textContent = profile.name || user.displayName || user.email || "Campus user";
   els.sessionRole.textContent = `${capitalize(profile.role)} account - ${user.email || ""}`;
-  els.studentName.value = profile.name || user.displayName || "";
-  els.studentName.disabled = profile.role === "student";
 
   els.studentPanel.classList.toggle("hidden", profile.role !== "student");
   els.driverPanel.classList.toggle("hidden", profile.role !== "driver");
@@ -567,6 +579,7 @@ function handleSignedInState(user, profile) {
     els.driverPickerLayout.classList.add("hidden");
     els.appDashboard.classList.remove("hidden");
     createStudentWatcher();
+    refreshMapLayout();
   } else {
     els.appDashboard.classList.add("hidden");
     els.driverPickerLayout.classList.remove("hidden");
@@ -642,13 +655,14 @@ function updateBusMarker(live) {
   els.busSpeed.textContent =
     typeof live?.speed === "number" && !Number.isNaN(live.speed)
       ? `${Math.round(live.speed * 3.6)} km/h`
-      : "--";
+      : "0 km/h";
+  updateStudentEta();
 }
 
 function drawGeofence() {
   if (!appState.map || !appState.busMarker) return;
 
-  const radius = Number(els.geofenceRadius.value);
+  const radius = defaultRadius;
   if (!appState.geofenceCircle) {
     appState.geofenceCircle = L.circle([0, 0], {
       radius,
@@ -682,9 +696,15 @@ function updateStatusCopy() {
       return;
     }
 
+    els.studentTrackedBus.textContent = route.name;
+    els.studentBusLiveState.textContent = isActive ? "Live" : "Offline";
+    els.studentLastUpdate.textContent = updatedAt ? updatedAt.toLocaleTimeString() : "--";
+    els.studentBusCoords.textContent =
+      live?.lat && live?.lng ? `${live.lat.toFixed(5)}, ${live.lng.toFixed(5)}` : "--, --";
     els.studentStatus.textContent = isActive
-      ? `${route.name} is live. The orange bus marker updates automatically for everyone watching this route.`
+      ? `${route.name} is live. ETA updates will appear for your selected stop.`
       : `${route.name} is selected. Waiting for the driver to start live tracking.`;
+    updateStudentEta();
   }
 
   if (appState.role === "driver") {
@@ -801,7 +821,7 @@ async function stopDriverTracking() {
 function maybeCheckInStudent() {
   const route = getSelectedRoute();
   const live = appState.selectedRouteLive;
-  const radius = Number(els.geofenceRadius.value);
+  const radius = defaultRadius;
 
   if (
     appState.role !== "student" ||
@@ -940,6 +960,62 @@ function updateDriverTelemetry(coords) {
   els.driverUpdatesSent.textContent = String(appState.driverUpdateCount);
 }
 
+function populateStudentStops(route) {
+  els.studentStopSelect.innerHTML = '<option value="">Select a stop</option>';
+  (route.stops || []).forEach((stopName, index) => {
+    const option = document.createElement("option");
+    option.value = String(index);
+    option.textContent = stopName;
+    els.studentStopSelect.appendChild(option);
+  });
+  els.studentEta.textContent = "--";
+}
+
+function updateStudentEta() {
+  const route = getSelectedRoute();
+  const live = appState.selectedRouteLive;
+  const stopIndex = appState.studentSelectedStopIndex;
+
+  if (!route || stopIndex === null || stopIndex === undefined) {
+    els.studentEta.textContent = "--";
+    return;
+  }
+
+  const stopPoint = route.path?.[stopIndex];
+  if (!stopPoint) {
+    els.studentEta.textContent = "--";
+    return;
+  }
+
+  if (!live?.active || !live?.lat || !live?.lng) {
+    els.studentEta.textContent = "Bus is not live yet";
+    return;
+  }
+
+  const busLatLng = L.latLng(live.lat, live.lng);
+  const stopLatLng = L.latLng(stopPoint.lat, stopPoint.lng);
+  const distanceMeters = appState.map.distance(busLatLng, stopLatLng);
+
+  if (distanceMeters <= 35) {
+    appState.studentSelectedStopIndex = null;
+    els.studentStopSelect.value = "";
+    els.studentEta.textContent = "Arrived at your stop";
+    return;
+  }
+
+  const speedMetersPerSecond = Number(live.speed || 0);
+  if (speedMetersPerSecond <= 0.8) {
+    els.studentEta.textContent = "Bus stopped";
+    return;
+  }
+
+  const etaSeconds = Math.round(distanceMeters / speedMetersPerSecond);
+  const minutes = Math.floor(etaSeconds / 60);
+  const seconds = etaSeconds % 60;
+  els.studentEta.textContent =
+    minutes > 0 ? `${minutes} min ${String(seconds).padStart(2, "0")} sec` : `${seconds} sec`;
+}
+
 function startDriverTripTimer() {
   stopDriverTripTimer();
   updateDriverTripDuration();
@@ -979,6 +1055,15 @@ function resetDriverTripMetrics() {
   els.driverLongitude.textContent = "--";
   els.driverAccuracy.textContent = "--";
   els.driverUpdatesSent.textContent = "0";
+}
+
+function refreshMapLayout() {
+  if (!appState.map) return;
+  [0, 120, 320].forEach((delay) => {
+    window.setTimeout(() => {
+      appState.map.invalidateSize(true);
+    }, delay);
+  });
 }
 
 function createBusIcon(isMoving) {

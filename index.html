@@ -91,11 +91,7 @@
           <div class="driver-picker-header">
             <div class="driver-badge">Driver</div>
             <h2>Select Your Bus</h2>
-            <p>Choose the bus you are driving today before opening the live dashboard.</p>
-            <div class="driver-status-row">
-              <span class="driver-status-item online">Driver online</span>
-              <span class="driver-status-item offline">Offline buses available</span>
-            </div>
+            <p>Choose the bus you are driving today.</p>
           </div>
 
           <div class="driver-bus-grid" id="driverBusGrid"></div>
@@ -122,31 +118,49 @@
           <section id="studentPanel" class="panel glass control-panel">
             <div class="panel-header">
               <div>
-                <p class="panel-kicker">Student View</p>
-                <h2>Live route status</h2>
+                <p class="panel-kicker">Tracking Your Selected Bus</p>
+                <h2>My Bus No</h2>
               </div>
             </div>
-            <label class="field">
-              <span>Display name</span>
-              <input id="studentName" type="text" maxlength="40" placeholder="Optional name for attendance" />
-            </label>
-            <label class="field">
-              <span>Geofence radius</span>
-              <input id="geofenceRadius" type="range" min="10" max="100" value="20" />
-              <strong id="geofenceRadiusValue">20 meters</strong>
-            </label>
             <div class="info-card">
               <p id="studentStatus">Select a route to start watching the bus.</p>
             </div>
             <div class="info-grid">
+              <article class="mini-card">
+                <span>Tracking</span>
+                <strong id="studentTrackedBus">--</strong>
+              </article>
+              <article class="mini-card">
+                <span>ETA to your stop</span>
+                <strong id="studentEta">--</strong>
+              </article>
+            </div>
+            <label class="field">
+              <span>Set Stop</span>
+              <select id="studentStopSelect">
+                <option value="">Select a stop</option>
+              </select>
+            </label>
+            <div class="info-grid">
+              <article class="mini-card">
+                <span>Bus status</span>
+                <strong id="studentBusLiveState">Offline</strong>
+              </article>
               <article class="mini-card">
                 <span>Attendance</span>
                 <strong id="attendanceState">Idle</strong>
               </article>
               <article class="mini-card">
                 <span>Bus speed</span>
-                <strong id="busSpeed">--</strong>
+                <strong id="busSpeed">0 km/h</strong>
               </article>
+              <article class="mini-card">
+                <span>Updated</span>
+                <strong id="studentLastUpdate">--</strong>
+              </article>
+            </div>
+            <div class="info-card compact">
+              <p id="studentBusCoords">--, --</p>
             </div>
           </section>
 
@@ -213,15 +227,15 @@
         </section>
 
         <section class="map-panel glass">
-          <div class="map-header">
-            <div>
-              <p class="panel-kicker">Live Map</p>
-              <h2 id="selectedRouteTitle">Choose a route</h2>
+            <div class="map-header">
+              <div>
+                <p class="panel-kicker">Live Map</p>
+                <h2 id="selectedRouteTitle">Choose a route</h2>
+              </div>
+              <div class="map-meta">
+              <span id="routeMetaBadge" class="status-pill secondary">Select a bus route</span>
+              </div>
             </div>
-            <div class="map-meta">
-              <span id="routeMetaBadge" class="status-pill secondary">No route selected</span>
-            </div>
-          </div>
           <div id="map" class="map-canvas" aria-label="Campus bus map"></div>
         </section>
       </main>

@@ -148,12 +148,10 @@ input {
   min-height: calc(100vh - 220px);
   border-radius: 36px;
   padding: 28px;
-  background:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(180deg, #0f172a 0%, #111b2e 100%);
-  background-size: 48px 48px, 48px 48px, auto;
-  color: #f8fbff;
+  background: rgba(255, 252, 245, 0.72);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  color: var(--text);
 }
 
 .driver-picker-shell {
@@ -169,12 +167,12 @@ input {
 .driver-picker-header h2 {
   margin: 14px 0 8px;
   font-size: clamp(2rem, 4vw, 3.5rem);
-  color: #f8fbff;
+  color: var(--text);
 }
 
 .driver-picker-header p {
   margin: 0;
-  color: #8fa8d8;
+  color: var(--muted);
   font-size: 1rem;
 }
 
@@ -230,12 +228,12 @@ input {
 }
 
 .driver-bus-card {
-  border: 1px solid var(--night-border);
+  border: 1px solid rgba(239, 125, 24, 0.12);
   border-radius: 26px;
-  background: rgba(23, 32, 51, 0.96);
-  color: #f8fbff;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text);
   padding: 22px 18px;
-  min-height: 160px;
+  min-height: 132px;
   cursor: pointer;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   position: relative;
@@ -255,8 +253,8 @@ input {
 .driver-bus-card:hover,
 .driver-bus-card.active {
   transform: translateY(-2px);
-  border-color: #4c6da1;
-  box-shadow: 0 18px 36px rgba(9, 16, 29, 0.42);
+  border-color: rgba(239, 125, 24, 0.35);
+  box-shadow: 0 18px 36px rgba(48, 38, 22, 0.16);
 }
 
 .driver-bus-card.active::after {
@@ -272,13 +270,19 @@ input {
 .driver-bus-card strong {
   display: block;
   font-size: 1.55rem;
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .driver-bus-card span {
-  display: block;
-  color: #8fa8d8;
-  font-size: 0.95rem;
+  display: none;
+}
+
+.driver-bus-card .driver-bus-arrow {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  color: var(--muted);
+  font-size: 1.25rem;
 }
 
 .driver-continue-btn {
@@ -328,7 +332,8 @@ input {
 }
 
 .field input[type="email"],
-.field input[type="password"] {
+.field input[type="password"],
+.field select {
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.85);
   border-radius: 14px;
@@ -399,6 +404,10 @@ input {
 
 .route-card {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   text-align: left;
   border: 1px solid transparent;
   border-radius: 22px;
@@ -416,25 +425,19 @@ input {
 }
 
 .route-card strong {
-  display: block;
   font-size: 1rem;
 }
 
 .route-card span {
-  display: block;
-  margin-top: 6px;
+  display: inline-flex;
+  margin-top: 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .route-card small {
-  display: inline-flex;
-  margin-top: 14px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(29, 28, 26, 0.05);
-  color: var(--muted);
-  font-weight: 600;
+  display: none;
 }
 
 .control-panel {
@@ -477,6 +480,10 @@ input {
 
 .info-card p {
   margin: 0;
+}
+
+.info-card.compact {
+  margin-top: 16px;
 }
 
 .driver-card {
@@ -617,18 +624,11 @@ input {
 
 .map-canvas {
   flex: 1;
+  width: 100%;
   min-height: 640px;
   border-radius: 28px;
   overflow: hidden;
-  background:
-    linear-gradient(135deg, rgba(239, 125, 24, 0.14), rgba(255, 255, 255, 0.5)),
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.45),
-      rgba(255, 255, 255, 0.45) 10px,
-      rgba(244, 236, 222, 0.58) 10px,
-      rgba(244, 236, 222, 0.58) 20px
-    );
+  background: #efe8d8;
 }
 
 @media (max-width: 1080px) {
