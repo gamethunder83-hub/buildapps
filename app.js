@@ -169,10 +169,13 @@ const appState = {
   driverTripTimer: null,
   driverUpdateCount: 0,
   driverLastCoords: null,
+  studentStopMode: "route",
   studentSelectedStopIndex: null,
+  studentCustomStop: null,
   map: null,
   busMarker: null,
   studentMarker: null,
+  studentStopMarker: null,
   geofenceCircle: null,
   routePolyline: null,
   auth: null,
@@ -214,7 +217,10 @@ const els = {
   studentStatus: document.getElementById("studentStatus"),
   studentTrackedBus: document.getElementById("studentTrackedBus"),
   studentEta: document.getElementById("studentEta"),
+  studentStopModeSwitch: document.getElementById("studentStopModeSwitch"),
   studentStopSelect: document.getElementById("studentStopSelect"),
+  studentMapStopCard: document.getElementById("studentMapStopCard"),
+  studentMapStopStatus: document.getElementById("studentMapStopStatus"),
   studentBusLiveState: document.getElementById("studentBusLiveState"),
   studentLastUpdate: document.getElementById("studentLastUpdate"),
   studentBusCoords: document.getElementById("studentBusCoords"),
@@ -285,9 +291,18 @@ function setupAppActions() {
   els.startTrackingBtn.addEventListener("click", startDriverTracking);
   els.stopTrackingBtn.addEventListener("click", stopDriverTracking);
   els.routeSelect.addEventListener("change", () => selectRoute(els.routeSelect.value));
+  els.studentStopModeSwitch.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-stop-mode]");
+    if (!button) return;
+    setStudentStopMode(button.dataset.stopMode);
+  });
   els.studentStopSelect.addEventListener("change", () => {
     appState.studentSelectedStopIndex =
       els.studentStopSelect.value === "" ? null : Number(els.studentStopSelect.value);
+    if (appState.studentSelectedStopIndex !== null) {
+      appState.studentCustomStop = null;
+      updateStudentStopMarker();
+    }
     updateStudentEta();
   });
   els.mapFullscreenBtn.addEventListener("click", toggleMapFullscreen);
@@ -329,6 +344,8 @@ async function initializeLeafletMap() {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(appState.map);
+
+  appState.map.on("click", handleMapStopSelection);
 }
 
 async function initializeFirebase() {
@@ -503,7 +520,9 @@ function selectRoute(routeId) {
   els.selectedRouteTitle.textContent = route.name;
   els.routeMetaBadge.textContent = `${route.name} selected`;
   appState.studentSelectedStopIndex = null;
+  appState.studentCustomStop = null;
   populateStudentStops(route);
+  updateStudentStopMarker();
   fitRoute(route);
   subscribeToRoute(route.id);
   refreshMapLayout();
@@ -606,6 +625,8 @@ async function handleSignedOutState() {
   appState.currentProfile = null;
   appState.role = null;
   appState.driverAssignedRouteId = null;
+  appState.studentCustomStop = null;
+  appState.studentSelectedStopIndex = null;
   resetDriverTripMetrics();
   els.authLayout.classList.remove("hidden");
   els.driverPickerLayout.classList.add("hidden");
@@ -965,6 +986,7 @@ function populateStudentStops(route) {
     els.studentStopSelect.appendChild(option);
   });
   els.studentEta.textContent = "--";
+  setStudentStopMode(appState.studentStopMode);
 }
 
 function updateStudentEta() {
@@ -972,12 +994,26 @@ function updateStudentEta() {
   const live = appState.selectedRouteLive;
   const stopIndex = appState.studentSelectedStopIndex;
 
-  if (!route || stopIndex === null || stopIndex === undefined) {
+  if (!route) {
     els.studentEta.textContent = "--";
     return;
   }
 
-  const stopPoint = route.path?.[stopIndex];
+  let stopPoint = null;
+  if (appState.studentStopMode === "route") {
+    if (stopIndex === null || stopIndex === undefined) {
+      els.studentEta.textContent = "--";
+      return;
+    }
+    stopPoint = route.path?.[stopIndex];
+  } else if (appState.studentStopMode === "map") {
+    stopPoint = appState.studentCustomStop;
+    if (!stopPoint) {
+      els.studentEta.textContent = "Tap on map to set stop";
+      return;
+    }
+  }
+
   if (!stopPoint) {
     els.studentEta.textContent = "--";
     return;
@@ -993,8 +1029,7 @@ function updateStudentEta() {
   const distanceMeters = appState.map.distance(busLatLng, stopLatLng);
 
   if (distanceMeters <= 35) {
-    appState.studentSelectedStopIndex = null;
-    els.studentStopSelect.value = "";
+    clearStudentStopSelection();
     els.studentEta.textContent = "Arrived at your stop";
     return;
   }
@@ -1060,6 +1095,75 @@ function refreshMapLayout() {
       appState.map.invalidateSize(true);
     }, delay);
   });
+}
+
+function setStudentStopMode(mode) {
+  appState.studentStopMode = mode === "map" ? "map" : "route";
+  document.querySelectorAll("[data-stop-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.stopMode === appState.studentStopMode);
+  });
+  const usingMap = appState.studentStopMode === "map";
+  els.studentStopSelect.parentElement.classList.toggle("hidden", usingMap);
+  els.studentMapStopCard.classList.toggle("hidden", !usingMap);
+  if (usingMap) {
+    els.studentMapStopStatus.textContent = appState.studentCustomStop
+      ? `Map stop set at ${appState.studentCustomStop.lat.toFixed(5)}, ${appState.studentCustomStop.lng.toFixed(5)}`
+      : "Tap anywhere on the map to set your custom stop.";
+  }
+  updateStudentEta();
+}
+
+function handleMapStopSelection(event) {
+  if (appState.role !== "student" || appState.studentStopMode !== "map") return;
+  appState.studentCustomStop = {
+    lat: event.latlng.lat,
+    lng: event.latlng.lng
+  };
+  appState.studentSelectedStopIndex = null;
+  els.studentStopSelect.value = "";
+  els.studentMapStopStatus.textContent = `Map stop set at ${event.latlng.lat.toFixed(5)}, ${event.latlng.lng.toFixed(5)}`;
+  updateStudentStopMarker();
+  updateStudentEta();
+}
+
+function updateStudentStopMarker() {
+  if (!appState.map) return;
+
+  let stopPoint = null;
+  if (appState.studentStopMode === "map" && appState.studentCustomStop) {
+    stopPoint = appState.studentCustomStop;
+  } else if (appState.studentStopMode === "route" && appState.studentSelectedStopIndex !== null) {
+    const route = getSelectedRoute();
+    stopPoint = route?.path?.[appState.studentSelectedStopIndex] || null;
+  }
+
+  if (!stopPoint) {
+    if (appState.studentStopMarker) {
+      appState.studentStopMarker.remove();
+      appState.studentStopMarker = null;
+    }
+    return;
+  }
+
+  if (!appState.studentStopMarker) {
+    appState.studentStopMarker = L.circleMarker([stopPoint.lat, stopPoint.lng], {
+      radius: 10,
+      fillColor: "#ef7d18",
+      fillOpacity: 0.95,
+      color: "#ffffff",
+      weight: 3
+    }).addTo(appState.map);
+  } else {
+    appState.studentStopMarker.setLatLng([stopPoint.lat, stopPoint.lng]);
+  }
+}
+
+function clearStudentStopSelection() {
+  appState.studentSelectedStopIndex = null;
+  appState.studentCustomStop = null;
+  els.studentStopSelect.value = "";
+  els.studentMapStopStatus.textContent = "Tap anywhere on the map to set your custom stop.";
+  updateStudentStopMarker();
 }
 
 async function toggleMapFullscreen() {

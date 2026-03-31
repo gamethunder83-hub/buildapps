@@ -21,14 +21,7 @@
   <body>
     <div class="app-shell">
       <header class="hero">
-        <div>
-          <p class="eyebrow">Campus Transit</p>
-          <h1>Track every bus in real time with secure student and driver access.</h1>
-          <p class="hero-copy">
-            Sign in once, get your role-aware dashboard, and keep route tracking
-            and geofence attendance in one smooth flow.
-          </p>
-        </div>
+        <p class="eyebrow app-brand">Campus Transit</p>
         <button id="logoutBtn" class="action-button muted top-logout hidden">Log Out</button>
       </header>
 
@@ -209,12 +202,19 @@
               <strong id="studentEta">--</strong>
             </article>
           </div>
+          <div class="set-stop-mode" id="studentStopModeSwitch">
+            <button class="role-chip active" type="button" data-stop-mode="route">Bus Stops</button>
+            <button class="role-chip" type="button" data-stop-mode="map">Map Stop</button>
+          </div>
           <label class="field">
-            <span>Set Stop</span>
+            <span>Set Stop From Route</span>
             <select id="studentStopSelect">
               <option value="">Select a stop</option>
             </select>
           </label>
+          <div class="info-card compact hidden" id="studentMapStopCard">
+            <p id="studentMapStopStatus">Choose `Map Stop`, then tap anywhere on the map to set your stop.</p>
+          </div>
           <div class="info-grid">
             <article class="mini-card">
               <span>Bus status</span>

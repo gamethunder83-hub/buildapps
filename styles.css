@@ -50,8 +50,8 @@ input {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  align-items: flex-start;
-  margin-bottom: 24px;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
 .eyebrow,
@@ -71,17 +71,8 @@ input {
   line-height: 1.04;
 }
 
-.hero h1 {
-  max-width: 640px;
-  font-size: clamp(2rem, 4vw, 4rem);
-}
-
-.hero-copy {
-  max-width: 640px;
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.6;
+.app-brand {
+  margin: 0;
 }
 
 .role-switch {
@@ -348,6 +339,18 @@ input {
 
 .auth-submit {
   margin: 6px 0 16px;
+}
+
+.set-stop-mode {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px;
+  margin-top: 16px;
+  margin-bottom: 14px;
+  background: rgba(255, 250, 240, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 24px;
 }
 
 .dashboard {
@@ -676,6 +679,7 @@ input {
 
   .hero {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .map-canvas {
